@@ -8,31 +8,32 @@
     <title>Weather Dashboard</title>
 </head>
 <body>
-<header>
-    <h1>
-        Weather Dashboard
-    </h1>
-</header>
-<main>
-    <div class="form-container"><!--contains STATIC elements; contains city selector-->
-        
-        <input type="text" placeholder="Insert City Name" name="city" id="city" class="form-input"/>
-        <button class="btn" id="check-weather">Check Weather</button>
+    <header>
+        <h1>
+            Weather Dashboard
+        </h1>
+    </header>
+    <main>
+        <form class="form-container"><!--contains STATIC elements; contains city selector-->
+            
+            <input type="text" placeholder="Insert City Name" name="city" id="city" class="form-input"/>
+            <button class="btn" id="check-weather">Check Weather</button>
 
-    </div>
-    <div><!--contains DYNAMIC elements; contains weather report-->
+        </form>
+        <section class="current-weather" id="weather-container"><!--contains DYNAMIC elements; contains weather report-->
 
-    </div>
-    <div><!--contains DYNAMIC elements; 5 day forecast report-->
+        </section>
+        <div id="forecast-container"><!--contains DYNAMIC elements; 5 day forecast report-->
 
-    </div>
-    <div><!--contains DYNAMIC elements; contains callback buttons-->
+        </div>
+        <div><!--contains DYNAMIC elements; contains callback buttons-->
 
-    </div>
-</main>
-<footer>
+        </div>
+    </main>
+    <footer>
 
-</footer>
-<script src="./assets/js/script.js"></script>    
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="./assets/js/script.js"></script>    
 </body>
 </html>

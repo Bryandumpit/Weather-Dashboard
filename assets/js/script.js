@@ -5,13 +5,19 @@ button to submit the city name
 from https://api.openweathermap.org need to request:
  CurrentWeatherData, 5Day Forecast and UV Index, direct geocoding
 */
-var cityApiUrl = 'http://api.openweathermap.org/'
+var cityApiUrl = 'https://api.openweathermap.org/data/3.0/onecall?'
 
-var apiKey = '41fd2eedaf347c05f695ec707c59c98c'
+var apiKey = 'de3a3467f61c76a1a478c171e612306e'
 
 var searchButtonEl = document.querySelector("#check-weather");
 
 var cityInputEl = document.querySelector("#city");
+
+var weatherReportContainerEl = document.querySelector("#weather-container");
+
+var forecastReportContainerEl = document.querySelector("#forecast-container")
+
+
 
 var searchWeather = function(event){
     event.preventDefault();
@@ -23,7 +29,7 @@ var searchWeather = function(event){
     if (city) {
         console.log(city + "if");//call fetch function
         getCityGeoPos(city);
-        cityInputEl.value = "";
+        
     } else {
         alert ("Please enter a city name")
     }
@@ -34,7 +40,7 @@ var searchWeather = function(event){
 //fetch city geo position function
 var getCityGeoPos = function(city){
     var city = cityInputEl.value
-    var cityGeoPosApiUrl = cityApiUrl + 'geo/1.0/direct?q=' + city + "&limit=1&appid=" + apiKey;
+    var cityGeoPosApiUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=' + city + "&limit=1&appid=" + apiKey;
      console.log(cityGeoPosApiUrl);
 
      fetch(cityGeoPosApiUrl)
@@ -42,7 +48,8 @@ var getCityGeoPos = function(city){
         if (response.ok) {
             response.json().then(function(data){
                 console.log(data);
-                getCityWeather (data);
+                getCityWeather(data);
+                              
                 
             })
         } else {
@@ -55,13 +62,13 @@ var getCityGeoPos = function(city){
 }
 //fetch city weather function
 var getCityWeather = function (cityGeoPos) {
-    console.log("data passed to function")
+    console.log("data passed to weather fn")
     console.log(cityGeoPos[0].lon, cityGeoPos[0].lat);
 
     var cityLat = cityGeoPos[0].lat;
     var cityLon = cityGeoPos[0].lon;
 
-    var cityWeatherApiUrl = cityApiUrl + 'data/2.5/weather?lat=' + cityLat + '&lon=' + cityLon + '&units=metric&appid=' + apiKey;
+    var cityWeatherApiUrl = cityApiUrl + 'lat=' + cityLat + '&lon=' + cityLon + '&units=metric&exclude=minutely,hourly,alerts&appid=' + apiKey;
     console.log(cityWeatherApiUrl);
 
     fetch(cityWeatherApiUrl)
@@ -70,6 +77,7 @@ var getCityWeather = function (cityGeoPos) {
             response.json().then(function(data){
                 console.log(data);
                 displayCityWeather(data);
+                displayCityForecast(data);
                 
             })
         } else {
@@ -81,20 +89,109 @@ var getCityWeather = function (cityGeoPos) {
      })
 }
 
+
+
 var displayCityWeather = function(cityWeather) {
     console.log(cityWeather, "data passed");
-
-    console.log(cityWeather.name);
-    console.log(cityWeather.main.temp + "degC");
-    console.log(cityWeather.main.humidity + "%");
-    console.log(cityWeather.wind.speed + "m/s");
-
+     
     //create element
     //set content
     //append to container
     //append to page
 
+    var cityNameEl = document.createElement("p");
+    var city = cityInputEl.value
+    cityNameEl.textContent=city;//add current date via moment.js
+    console.log(cityNameEl);
+
+    var tempEl = document.createElement("p");
+    var temp = + cityWeather.current.temp; 
+    tempEl.textContent = 'Temperature: ' + temp + "\u00B0C";
+    console.log(tempEl);
+
+    var windEl = document.createElement("p");
+    var wind = cityWeather.current.wind_speed;
+    windEl.textContent = 'Wind Speed: ' + wind + "m/s";
+    console.log(windEl);
+
+    var humidEl = document.createElement("p");
+    var humid =  cityWeather.current.humidity;
+    humidEl.textContent = 'Humidity: ' + humid + "%";
+    console.log(humidEl);
+    
+    var uvEl = document.createElement("p");
+    var uv =  cityWeather.current.uvi;
+    uvEl.textContent = 'UV Index: ' + uv;
+    console.log(uvEl);
+    if (uv<2){
+        uvEl.setAttribute("class","low-uv");
+        console.log("low-uv")
+    } else if (uv>2 && uv<5){
+        uvEl.setAttribute("class", "moderate-uv");
+        console.log("moderate-uv")
+    } else if (uv>5&&uv<7){
+        uvEl.setAttribute("class", "high-uv")
+        console.log("high-uv")
+    } else if(uv>7&&uv<9){
+        uvEl.setAttribute("class", "vhigh-uv")
+        console.log("vhigh-uv")
+    } else {
+        uvEl.setAttribute("class", "extreme-uv")
+        console.log("extreme-uv")
+    }
+
+    weatherReportContainerEl.append(cityNameEl, tempEl, windEl, humidEl, uvEl);
 }
+
+var displayCityForecast = function(cityForecast) {
+    console.log(cityForecast);
+    console.log(cityForecast.daily.slice(0,5));
+    
+    var fiveDayForecast = cityForecast.daily.slice(0,5);
+
+    for (var i = 0; i<fiveDayForecast.length; i++){
+        
+
+        //create forecast container div, append forecast data to forecast container div
+        //append forecast container div to corresponding container in DOM 
+        //need date, temp, wind, humidity
+
+        forecastContainerEl = document.createElement("div")
+
+        var date = moment().add(i,"day").format("MM/DD/YY");
+        var forecastTemp = fiveDayForecast[i].temp.max;
+        var forecastWind = fiveDayForecast[i].wind_speed;
+        var forecastHumid = fiveDayForecast[i].humidity;
+                
+        console.log(date);
+        console.log(forecastTemp);
+        console.log(forecastWind);
+        console.log(forecastHumid);
+
+        var dateEl = document.createElement("p");
+        dateEl.textContent = date
+
+        var forecastTempEl = document.createElement("p");
+        forecastTempEl.textContent = 'Temperature: ' + forecastTemp + '\u00B0C';
+
+        var forecastWindEl = document.createElement("p");
+        forecastWindEl.textContent= 'Wind Speed: ' + forecastWind + 'm/s';
+
+        var forecastHumidEl = document.createElement("p");
+        forecastHumidEl.textContent = 'Humidity: ' + forecastHumid + '%';
+        
+        forecastContainerEl.append(dateEl, forecastTempEl, forecastWindEl, forecastHumidEl);
+
+        forecastReportContainerEl.appendChild(forecastContainerEl);
+    }
+    
+    cityInputEl.value = "";
+
+}
+
+
+
+
 
 
 searchButtonEl.addEventListener("click", searchWeather);
