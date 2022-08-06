@@ -15,9 +15,10 @@ var cityInputEl = document.querySelector("#city");
 
 var weatherReportContainerEl = document.querySelector("#weather-container");
 
-var forecastReportContainerEl = document.querySelector("#forecast-container")
+var forecastReportContainerEl = document.querySelector("#forecast-container");
 
 var weatherRecallContainerEl = document.querySelector("#recall");
+
 
 var weather = [];
 var forecast = [];
@@ -156,6 +157,8 @@ var displayCityWeather = function(cityWeather) {
 
     weatherArrayHandler(weatherObj);
 
+    createCityBtn(city);
+
     weatherReportContainerEl.append(cityNameEl, tempEl, windEl, humidEl, uvEl);
 }
 
@@ -215,8 +218,21 @@ var displayCityForecast = function(cityForecast) {
     }
     forecastArrayHandler(pushedForecastObj);
     cityInputEl.value = "";
+    
 
 }
+
+//create city button
+var createCityBtn = function(cityName){
+    var cityButtonEl = document.createElement("button");
+    cityButtonEl.textContent = cityName;
+    console.log(cityButtonEl)
+    cityButtonEl.className = "btn edit-btn";
+
+    weatherRecallContainerEl.appendChild(cityButtonEl);
+}
+
+
 
 //put to local storage and create buttons for recall
 
@@ -235,6 +251,13 @@ var forecastArrayHandler = function(forecastObj){
     localStorage.setItem("forecast", JSON.stringify(forecast))
 }
 
+//load weather when city button clicked
+var loadWeather = function(event) {
+    event.preventDefault
+    
+    console.log("button clicked")
+    console.log (event)
+}
 
-
+weatherRecallContainerEl.addEventListener("click", loadWeather);
 searchButtonEl.addEventListener("click", searchWeather);
