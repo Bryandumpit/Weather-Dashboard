@@ -17,6 +17,11 @@ var weatherReportContainerEl = document.querySelector("#weather-container");
 
 var forecastReportContainerEl = document.querySelector("#forecast-container")
 
+var weatherRecallContainerEl = document.querySelector("#recall");
+
+var weather = [];
+var forecast = [];
+
 
 
 var searchWeather = function(event){
@@ -101,7 +106,8 @@ var displayCityWeather = function(cityWeather) {
 
     var cityNameEl = document.createElement("p");
     var city = cityInputEl.value
-    cityNameEl.textContent=city;//add current date via moment.js
+    var date = moment().format("MM/DD/YY");
+    cityNameEl.textContent= city + ' ' + date;//add current date via moment.js
     console.log(cityNameEl);
 
     var tempEl = document.createElement("p");
@@ -140,6 +146,16 @@ var displayCityWeather = function(cityWeather) {
         console.log("extreme-uv")
     }
 
+    var weatherObj = {
+        name: cityInputEl.value,
+        currentTemp: temp,
+        currentWind: wind,
+        currentHumid: humid,
+        currentUv: uv,
+    }
+
+    weatherArrayHandler(weatherObj);
+
     weatherReportContainerEl.append(cityNameEl, tempEl, windEl, humidEl, uvEl);
 }
 
@@ -148,6 +164,8 @@ var displayCityForecast = function(cityForecast) {
     console.log(cityForecast.daily.slice(0,5));
     
     var fiveDayForecast = cityForecast.daily.slice(0,5);
+
+    var pushedForecastObj =[];
 
     for (var i = 0; i<fiveDayForecast.length; i++){
         
@@ -183,14 +201,39 @@ var displayCityForecast = function(cityForecast) {
         forecastContainerEl.append(dateEl, forecastTempEl, forecastWindEl, forecastHumidEl);
 
         forecastReportContainerEl.appendChild(forecastContainerEl);
+
+        var forecastObj ={
+            dt: date,
+            temp: forecastTemp,
+            wind: forecastWind,
+            humid: forecastHumid,
+        }
+
+        pushedForecastObj.push(forecastObj);
+
+        
     }
-    
+    forecastArrayHandler(pushedForecastObj);
     cityInputEl.value = "";
 
 }
 
+//put to local storage and create buttons for recall
 
+var weatherArrayHandler = function(weatherObj) {
+    console.log(weatherObj);
+    weather.push(weatherObj);
+    console.log(weather);
+    localStorage.setItem("weather", JSON.stringify(weather));
+    
+}
 
+var forecastArrayHandler = function(forecastObj){
+    console.log(forecastObj);
+    forecast.push(forecastObj);
+    console.log(forecast);
+    localStorage.setItem("forecast", JSON.stringify(forecast))
+}
 
 
 
