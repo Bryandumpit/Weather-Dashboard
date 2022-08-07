@@ -3,7 +3,7 @@ input field for user to enter a city name
 button to submit the city name
 
 from https://api.openweathermap.org need to request:
- CurrentWeatherData, 5Day Forecast and UV Index, direct geocoding
+ onecall
 */
 
 //variables:
@@ -86,8 +86,8 @@ var getCityWeather = function (cityGeoPos) {
         if (response.ok) {
             response.json().then(function(data){
                 console.log(data);
-                displayCityWeather(data);
-                displayCityForecast(data);
+                displayCityWeatherForecast(data);
+                
                 
             })
         } else {
@@ -100,50 +100,64 @@ var getCityWeather = function (cityGeoPos) {
 }
 
 
-
-var displayCityWeather = function(cityWeather) {
+//single function to handle and create elements for weather and forecast data; allows for all relevant data to be packaged as one
+var displayCityWeatherForecast = function(cityWeather) {
     console.log(cityWeather, "data passed");
+    
+    //add code to make sure previously displayed content is removed (for subsequent searches and recalls);
+
+    console.log("remove previous content first")//placeholder
+
+    //package data from fetch(apiUrl) with city name, only need to work off of one data package per city in first search and in recall/loaded data from localstorage;
+    var cityWeatherForecast = [];
+    var cityName = cityInputEl.value;
+    cityWeatherForecast.push(cityName);
+    cityWeatherForecast.push(cityWeather);
+    localStorage.setItem(cityName, JSON.stringify(cityWeatherForecast));
+    console.log(cityWeatherForecast);
+
+    //calls function to create recall button for cityName
+
+    createCityBtn(cityName);//tie button name and property to cityName; use cityName as unique ID for weatherforecast data from local storage
      
-    //create element
-    //set content
-    //append to container
-    //append to page
+    //create city current weather elements
 
     var cityNameEl = document.createElement("p");
     var city = cityInputEl.value
     var date = moment().format("MM/DD/YY");
-    cityNameEl.textContent= city + ' ' + date;//add current date via moment.js
+    cityNameEl.textContent= city + ' ' + date;
     console.log(cityNameEl);
 
     var tempEl = document.createElement("p");
-    var temp =  cityWeather.current.temp; 
+    var temp =  cityWeatherForecast.current.temp; 
     tempEl.textContent = 'Temperature: ' + temp + "\u00B0C";
     console.log(tempEl);
 
     var windEl = document.createElement("p");
-    var wind = cityWeather.current.wind_speed;
+    var wind = cityWeatherForecast.current.wind_speed;
     windEl.textContent = 'Wind Speed: ' + wind + "m/s";
     console.log(windEl);
 
     var humidEl = document.createElement("p");
-    var humid =  cityWeather.current.humidity;
+    var humid =  cityWeatherForecast.current.humidity;
     humidEl.textContent = 'Humidity: ' + humid + "%";
     console.log(humidEl);
     
     var uvEl = document.createElement("p");
-    var uv =  cityWeather.current.uvi;
+    var uv =  cityWeatherForecast.current.uvi;
     uvEl.textContent = 'UV Index: ' + uv;
     console.log(uvEl);
+    //control flow for uv value - low to extreme uv
     if (uv<2){
         uvEl.setAttribute("class","low-uv");
         console.log("low-uv")
-    } else if (uv>2 && uv<5){
+    } else if (uv>2 && uv<6){
         uvEl.setAttribute("class", "moderate-uv");
         console.log("moderate-uv")
-    } else if (uv>5&&uv<7){
+    } else if (uv>5&&uv<8){
         uvEl.setAttribute("class", "high-uv")
         console.log("high-uv")
-    } else if(uv>7&&uv<9){
+    } else if(uv>7&&uv<11){
         uvEl.setAttribute("class", "vhigh-uv")
         console.log("vhigh-uv")
     } else {
@@ -151,50 +165,36 @@ var displayCityWeather = function(cityWeather) {
         console.log("extreme-uv")
     }
 
-    var weatherObj = {
-        name: cityInputEl.value,
-        currentTemp: temp,
-        currentWind: wind,
-        currentHumid: humid,
-        currentUv: uv,
-    }
-
-    weatherArrayHandler(weatherObj);
-
-    createCityBtn(city);
+    //append elements to current weather container 
 
     weatherReportContainerEl.append(cityNameEl, tempEl, windEl, humidEl, uvEl);
-}
 
-var displayCityForecast = function(cityForecast) {
-    console.log(cityForecast);
-    console.log(cityForecast.daily.slice(0,5));
-    
-    var fiveDayForecast = cityForecast.daily.slice(0,5);
+//---------------------------------------------------------------------------------------------------------------------------
 
-    var pushedForecastObj =[];
+    //select out forecast data from cityWeatherForecast array
 
+    console.log(cityWeatherForecast);
+    console.log(cityWeatherForecast.daily.slice(0,5));
+
+    var fiveDayForecast = cityWeatherForecast.daily.slice(0,5);
+    //loop through array to create elements
     for (var i = 0; i<fiveDayForecast.length; i++){
         
-
-        //create forecast container div, append forecast data to forecast container div
-        //append forecast container div to corresponding container in DOM 
-        //need date, temp, wind, humidity
-
+        //create daily forecast container
         forecastContainerEl = document.createElement("div")
 
-        var date = moment().add(i,"day").format("MM/DD/YY");
+        var forecastDate = moment().add(i,"day").format("MM/DD/YY");
         var forecastTemp = fiveDayForecast[i].temp.max;
         var forecastWind = fiveDayForecast[i].wind_speed;
         var forecastHumid = fiveDayForecast[i].humidity;
                 
-        console.log(date);
+        console.log(forecastDate);
         console.log(forecastTemp);
         console.log(forecastWind);
         console.log(forecastHumid);
-
-        var dateEl = document.createElement("p");
-        dateEl.textContent = date
+        //create daily forecast elements
+        var forecastDateEl = document.createElement("p");
+        forecastDateEl.textContent = forecastDate
 
         var forecastTempEl = document.createElement("p");
         forecastTempEl.textContent = 'Temperature: ' + forecastTemp + '\u00B0C';
@@ -204,28 +204,19 @@ var displayCityForecast = function(cityForecast) {
 
         var forecastHumidEl = document.createElement("p");
         forecastHumidEl.textContent = 'Humidity: ' + forecastHumid + '%';
-        
-        forecastContainerEl.append(dateEl, forecastTempEl, forecastWindEl, forecastHumidEl);
-
+        //append elements to daily forecaset container; allows for each daily forecast to be treated as separate columns
+        forecastContainerEl.append(forecastDateEl, forecastTempEl, forecastWindEl, forecastHumidEl);
+        //append container to document container
         forecastReportContainerEl.appendChild(forecastContainerEl);
 
-        var forecastObj ={
-            dt: date,
-            temp: forecastTemp,
-            wind: forecastWind,
-            humid: forecastHumid,
         }
-
-        pushedForecastObj.push(forecastObj);
-
-        
-    }
-    forecastArrayHandler(pushedForecastObj);
-    cityInputEl.value = "";
     
+    //resets cityName input value
 
-}
+    cityInputEl.value = "";
 
+};
+    
 //create city button
 var createCityBtn = function(cityName){
     var cityButtonEl = document.createElement("button");
@@ -237,24 +228,6 @@ var createCityBtn = function(cityName){
 }
 
 
-
-//put weather ans forecast data to local storage 
-
-var weatherArrayHandler = function(weatherObj) {
-    console.log(weatherObj);
-    weather.push(weatherObj);
-    console.log(weather);
-    localStorage.setItem("weather", JSON.stringify(weather));
-    
-}
-
-var forecastArrayHandler = function(forecastObj){
-    console.log(forecastObj);
-    forecast.push(forecastObj);
-    console.log(forecast);
-    localStorage.setItem("forecast", JSON.stringify(forecast))
-}
-
 //load weather & forecast data when city button clicked, then package into an array
 var loadLocalStorage = function(event) {
     event.preventDefault
@@ -262,42 +235,18 @@ var loadLocalStorage = function(event) {
     console.log("button clicked")
     console.log (event)
 
-    var weather = localStorage.getItem("weather");
-    console.log(weather);
-    weather = JSON.parse(weather);
-    console.log(weather);
+    var weather = localStorage.getItem(cityName);
+    console.log(cityName);
+    weather = JSON.parse(cityName);
+    console.log(cityName);
 
-
-    var forecast = localStorage.getItem("forecast");
-    console.log(forecast);
-    forecast=JSON.parse(forecast);
-    console.log(forecast);
-
-    var weatherForecast = [];
-    weatherForecast.push(weather);
-    weatherForecast.push(forecast);
-
-    displayLoadedWeatherForecast(weatherForecast);
+    displayLoadedWeatherForecast(cityName);
 }
 //separate function to display loaded weather & forecast from recall button
 var displayLoadedWeatherForecast = function (weatherForecast) {
     console.log(weatherForecast, "passed data");
 
-    var cityName = weatherForecast[0].name
-    var cityNameEl = document.createElement("p")
-    var currentDate = moment().format("MM/DD/YY");
-    cityNameEl.textContent= cityName + ' ' + currentDate;
-    console.log(cityNameEl);
-
-    
-
-
-
-
-
 }
-
-
 
 //event listeners:
 
