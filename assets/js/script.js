@@ -100,8 +100,6 @@ var getCityWeather = function (cityGeoPos) {
 var cityDataHandler = function(cityWeather){
     console.log(cityWeather, "data passed");
     
-    
-
     //package data from fetch(apiUrl) with city name, only need to work off of one data package per city in first search and in recall/loaded data from localstorage;
     //index [0] would contain the city name searched and index [1] would contain the data fetched
     var cityWeatherForecast = [];
@@ -122,10 +120,10 @@ var cityDataHandler = function(cityWeather){
 var displayCityWeatherForecast = function(cityWeather) {
     
     //add code to make sure previously displayed content is removed (for subsequent searches and recalls);
-
-    console.log("remove previous content first")//placeholder
+    weatherReportContainerEl.replaceChildren();
+    forecastReportContainerEl.replaceChildren();
     
-     
+//--------------Current Weather Data Handling-----------------------------------   
     //create city current weather elements
 
     var cityWeatherForecast=cityWeather;
@@ -177,7 +175,7 @@ var displayCityWeatherForecast = function(cityWeather) {
 
     weatherReportContainerEl.append(cityNameEl, tempEl, windEl, humidEl, uvEl);
 
-//---------------------------------------------------------------------------------------------------------------------------
+//----------------------------Forecast Data Handling---------------------------------
 
     //select out forecast data from cityWeatherForecast array
 
@@ -189,7 +187,7 @@ var displayCityWeatherForecast = function(cityWeather) {
     for (var i = 0; i<fiveDayForecast.length; i++){
         
         //create daily forecast container
-        forecastContainerEl = document.createElement("div")
+        var forecastContainerEl = document.createElement("div")
 
         var forecastDate = moment().add(i,"day").format("MM/DD/YY");
         var forecastTemp = fiveDayForecast[i].temp.max;
@@ -240,6 +238,10 @@ var createCityBtn = function(cityName){
 //load weather & forecast data when city button clicked, then package into an array
 var loadLocalStorage = function(event) {
     event.preventDefault
+    
+    
+    
+    console.log("remove previous content first")//placeholder
 
     var city = event.target.getAttribute("id")
 
@@ -255,6 +257,8 @@ var loadLocalStorage = function(event) {
 
     displayCityWeatherForecast(weatherForecast);//sends loaded data to function creating elements and attaching to DOM
 }
+
+
 
 //event listeners:
 
