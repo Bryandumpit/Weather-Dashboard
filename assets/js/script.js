@@ -5,6 +5,8 @@ button to submit the city name
 from https://api.openweathermap.org need to request:
  CurrentWeatherData, 5Day Forecast and UV Index, direct geocoding
 */
+
+//variables:
 var cityApiUrl = 'https://api.openweathermap.org/data/3.0/onecall?'
 
 var apiKey = 'de3a3467f61c76a1a478c171e612306e'
@@ -23,7 +25,9 @@ var weatherRecallContainerEl = document.querySelector("#recall");
 var weather = [];
 var forecast = [];
 
+//functions:
 
+//handles city input from user then passes to geoposition function to determine lat and lon
 
 var searchWeather = function(event){
     event.preventDefault();
@@ -33,7 +37,7 @@ var searchWeather = function(event){
     console.log(city);
 
     if (city) {
-        console.log(city + "if");//call fetch function
+        console.log(city + "if");
         getCityGeoPos(city);
         
     } else {
@@ -43,7 +47,7 @@ var searchWeather = function(event){
     console.log(event);
 
 }
-//fetch city geo position function
+//fetch city geo position function; finds lat and lon and passes to weather and forecast functions
 var getCityGeoPos = function(city){
     var city = cityInputEl.value
     var cityGeoPosApiUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=' + city + "&limit=1&appid=" + apiKey;
@@ -112,7 +116,7 @@ var displayCityWeather = function(cityWeather) {
     console.log(cityNameEl);
 
     var tempEl = document.createElement("p");
-    var temp = + cityWeather.current.temp; 
+    var temp =  cityWeather.current.temp; 
     tempEl.textContent = 'Temperature: ' + temp + "\u00B0C";
     console.log(tempEl);
 
@@ -234,7 +238,7 @@ var createCityBtn = function(cityName){
 
 
 
-//put to local storage and create buttons for recall
+//put weather ans forecast data to local storage 
 
 var weatherArrayHandler = function(weatherObj) {
     console.log(weatherObj);
@@ -251,13 +255,51 @@ var forecastArrayHandler = function(forecastObj){
     localStorage.setItem("forecast", JSON.stringify(forecast))
 }
 
-//load weather when city button clicked
-var loadWeather = function(event) {
+//load weather & forecast data when city button clicked, then package into an array
+var loadLocalStorage = function(event) {
     event.preventDefault
     
     console.log("button clicked")
     console.log (event)
+
+    var weather = localStorage.getItem("weather");
+    console.log(weather);
+    weather = JSON.parse(weather);
+    console.log(weather);
+
+
+    var forecast = localStorage.getItem("forecast");
+    console.log(forecast);
+    forecast=JSON.parse(forecast);
+    console.log(forecast);
+
+    var weatherForecast = [];
+    weatherForecast.push(weather);
+    weatherForecast.push(forecast);
+
+    displayLoadedWeatherForecast(weatherForecast);
+}
+//separate function to display loaded weather & forecast from recall button
+var displayLoadedWeatherForecast = function (weatherForecast) {
+    console.log(weatherForecast, "passed data");
+
+    var cityName = weatherForecast[0].name
+    var cityNameEl = document.createElement("p")
+    var currentDate = moment().format("MM/DD/YY");
+    cityNameEl.textContent= cityName + ' ' + currentDate;
+    console.log(cityNameEl);
+
+    
+
+
+
+
+
 }
 
-weatherRecallContainerEl.addEventListener("click", loadWeather);
+
+
+//event listeners:
+
+weatherRecallContainerEl.addEventListener("click", loadLocalStorage);
 searchButtonEl.addEventListener("click", searchWeather);
