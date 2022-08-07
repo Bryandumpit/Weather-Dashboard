@@ -22,8 +22,6 @@ var forecastReportContainerEl = document.querySelector("#forecast-container");
 var weatherRecallContainerEl = document.querySelector("#recall");
 
 
-var weather = [];
-var forecast = [];
 
 //functions:
 
@@ -86,7 +84,7 @@ var getCityWeather = function (cityGeoPos) {
         if (response.ok) {
             response.json().then(function(data){
                 console.log(data);
-                displayCityWeatherForecast(data);
+                cityDataHandler(data);
                 
                 
             })
@@ -99,16 +97,13 @@ var getCityWeather = function (cityGeoPos) {
      })
 }
 
-
-//single function to handle and create elements for weather and forecast data; allows for all relevant data to be packaged as one
-var displayCityWeatherForecast = function(cityWeather) {
+var cityDataHandler = function(cityWeather){
     console.log(cityWeather, "data passed");
     
-    //add code to make sure previously displayed content is removed (for subsequent searches and recalls);
-
-    console.log("remove previous content first")//placeholder
+    
 
     //package data from fetch(apiUrl) with city name, only need to work off of one data package per city in first search and in recall/loaded data from localstorage;
+    //index [0] would contain the city name searched and index [1] would contain the data fetched
     var cityWeatherForecast = [];
     var cityName = cityInputEl.value;
     cityWeatherForecast.push(cityName);
@@ -119,48 +114,61 @@ var displayCityWeatherForecast = function(cityWeather) {
     //calls function to create recall button for cityName
 
     createCityBtn(cityName);//tie button name and property to cityName; use cityName as unique ID for weatherforecast data from local storage
+
+    displayCityWeatherForecast(cityWeatherForecast);
+}
+
+//single function to handle and create elements for weather and forecast data; allows for all relevant data to be packaged as one
+var displayCityWeatherForecast = function(cityWeather) {
+    
+    //add code to make sure previously displayed content is removed (for subsequent searches and recalls);
+
+    console.log("remove previous content first")//placeholder
+    
      
     //create city current weather elements
 
+    var cityWeatherForecast=cityWeather;
+
     var cityNameEl = document.createElement("p");
-    var city = cityInputEl.value
+    var city = cityWeather[0]
     var date = moment().format("MM/DD/YY");
     cityNameEl.textContent= city + ' ' + date;
     console.log(cityNameEl);
 
     var tempEl = document.createElement("p");
-    var temp =  cityWeatherForecast.current.temp; 
-    tempEl.textContent = 'Temperature: ' + temp + "\u00B0C";
+    var currentTemp =  cityWeatherForecast[1].current.temp; 
+    tempEl.textContent = 'Temperature: ' + currentTemp + "\u00B0C";
     console.log(tempEl);
 
     var windEl = document.createElement("p");
-    var wind = cityWeatherForecast.current.wind_speed;
-    windEl.textContent = 'Wind Speed: ' + wind + "m/s";
+    var currentWind = cityWeatherForecast[1].current.wind_speed;
+    windEl.textContent = 'Wind Speed: ' + currentWind + "m/s";
     console.log(windEl);
 
     var humidEl = document.createElement("p");
-    var humid =  cityWeatherForecast.current.humidity;
-    humidEl.textContent = 'Humidity: ' + humid + "%";
+    var currentHumid =  cityWeatherForecast[1].current.humidity;
+    humidEl.textContent = 'Humidity: ' + currentHumid + "%";
     console.log(humidEl);
     
     var uvEl = document.createElement("p");
-    var uv =  cityWeatherForecast.current.uvi;
-    uvEl.textContent = 'UV Index: ' + uv;
+    var currentUv =  cityWeatherForecast[1].current.uvi;
+    uvEl.textContent = 'UV Index: ' + currentUv;
     console.log(uvEl);
     //control flow for uv value - low to extreme uv
-    if (uv<2){
+    if (currentUv<3){//0-2 uv low                       
         uvEl.setAttribute("class","low-uv");
         console.log("low-uv")
-    } else if (uv>2 && uv<6){
+    } else if (currentUv>2 && currentUv<6){//3-5 uv moderate
         uvEl.setAttribute("class", "moderate-uv");
         console.log("moderate-uv")
-    } else if (uv>5&&uv<8){
+    } else if (currentUv>5&&currentUv<8){//6-7 uv high
         uvEl.setAttribute("class", "high-uv")
         console.log("high-uv")
-    } else if(uv>7&&uv<11){
+    } else if(currentUv>7&&currentUv<11){//8-10 uv vhigh
         uvEl.setAttribute("class", "vhigh-uv")
         console.log("vhigh-uv")
-    } else {
+    } else {//11+  uv extreme
         uvEl.setAttribute("class", "extreme-uv")
         console.log("extreme-uv")
     }
@@ -173,10 +181,10 @@ var displayCityWeatherForecast = function(cityWeather) {
 
     //select out forecast data from cityWeatherForecast array
 
-    console.log(cityWeatherForecast);
-    console.log(cityWeatherForecast.daily.slice(0,5));
+    console.log(cityWeatherForecast[1]);
+    console.log(cityWeatherForecast[1].daily.slice(0,5));
 
-    var fiveDayForecast = cityWeatherForecast.daily.slice(0,5);
+    var fiveDayForecast = cityWeatherForecast[1].daily.slice(0,5);
     //loop through array to create elements
     for (var i = 0; i<fiveDayForecast.length; i++){
         
@@ -223,6 +231,7 @@ var createCityBtn = function(cityName){
     cityButtonEl.textContent = cityName;
     console.log(cityButtonEl)
     cityButtonEl.className = "btn edit-btn";
+    cityButtonEl.setAttribute("id", cityName)
 
     weatherRecallContainerEl.appendChild(cityButtonEl);
 }
@@ -231,21 +240,20 @@ var createCityBtn = function(cityName){
 //load weather & forecast data when city button clicked, then package into an array
 var loadLocalStorage = function(event) {
     event.preventDefault
+
+    var city = event.target.getAttribute("id")
+
+    console.log(city);
     
     console.log("button clicked")
     console.log (event)
 
-    var weather = localStorage.getItem(cityName);
-    console.log(cityName);
-    weather = JSON.parse(cityName);
-    console.log(cityName);
+    
+    var loadedWeatherForecast = localStorage.getItem(city);
+    weatherForecast = JSON.parse(loadedWeatherForecast);
+    console.log(weatherForecast);
 
-    displayLoadedWeatherForecast(cityName);
-}
-//separate function to display loaded weather & forecast from recall button
-var displayLoadedWeatherForecast = function (weatherForecast) {
-    console.log(weatherForecast, "passed data");
-
+    displayCityWeatherForecast(weatherForecast);//sends loaded data to function creating elements and attaching to DOM
 }
 
 //event listeners:
