@@ -21,8 +21,6 @@ var forecastReportContainerEl = document.querySelector("#forecast-container");
 
 var weatherRecallContainerEl = document.querySelector("#recall");
 
-
-
 //functions:
 
 //handles city input from user then passes to geoposition function to determine lat and lon
@@ -128,11 +126,20 @@ var displayCityWeatherForecast = function(cityWeather) {
 
     var cityWeatherForecast=cityWeather;
 
-    var cityNameEl = document.createElement("p");
+    var weatherIcon = cityWeather[1].current.weather[0].icon;
+    var weatherIconEl = document.createElement("img")
+    weatherIconEl.src= 'http://openweathermap.org/img/wn/' + weatherIcon + '@2x.png'
+    weatherIconEl.alt= 'weather_icon'
+    console.log(weatherIconEl);
+
+    var cityContainerEl = document.createElement("div");
+    var cityNameEl = document.createElement("p")
     var city = cityWeather[0]
     var date = moment().format("MM/DD/YY");
-    cityNameEl.textContent= city + ' ' + date;
+    cityNameEl.textContent= city + ' ' + date + ' ';
+    cityContainerEl.append(cityNameEl, weatherIconEl);
     console.log(cityNameEl);
+    console.log(cityContainerEl);
 
     var tempEl = document.createElement("p");
     var currentTemp =  cityWeatherForecast[1].current.temp; 
@@ -173,7 +180,7 @@ var displayCityWeatherForecast = function(cityWeather) {
 
     //append elements to current weather container 
 
-    weatherReportContainerEl.append(cityNameEl, tempEl, windEl, humidEl, uvEl);
+    weatherReportContainerEl.append(cityContainerEl, tempEl, windEl, humidEl, uvEl);
 
 //----------------------------Forecast Data Handling---------------------------------
 
@@ -188,8 +195,14 @@ var displayCityWeatherForecast = function(cityWeather) {
         
         //create daily forecast container
         var forecastContainerEl = document.createElement("div")
-
+        
+        var forecastDateIconEl = document.createElement("div")
         var forecastDate = moment().add(i,"day").format("MM/DD/YY");
+        var forecastIcon = fiveDayForecast[i].weather[0].icon
+        var forecastIconEl = document.createElement("img")
+        forecastIconEl.src = 'http://openweathermap.org/img/wn/' + forecastIcon + '@2x.png'
+        forecastDateIconEl.append(forecastDate, forecastIconEl);
+
         var forecastTemp = fiveDayForecast[i].temp.max;
         var forecastWind = fiveDayForecast[i].wind_speed;
         var forecastHumid = fiveDayForecast[i].humidity;
@@ -211,7 +224,7 @@ var displayCityWeatherForecast = function(cityWeather) {
         var forecastHumidEl = document.createElement("p");
         forecastHumidEl.textContent = 'Humidity: ' + forecastHumid + '%';
         //append elements to daily forecaset container; allows for each daily forecast to be treated as separate columns
-        forecastContainerEl.append(forecastDateEl, forecastTempEl, forecastWindEl, forecastHumidEl);
+        forecastContainerEl.append(forecastDateIconEl, forecastTempEl, forecastWindEl, forecastHumidEl);
         //append container to document container
         forecastReportContainerEl.appendChild(forecastContainerEl);
 
@@ -257,7 +270,6 @@ var loadLocalStorage = function(event) {
 
     displayCityWeatherForecast(weatherForecast);//sends loaded data to function creating elements and attaching to DOM
 }
-
 
 
 //event listeners:
