@@ -1,0 +1,20 @@
+.low-uv{
+    color: white;
+    background-color: green;
+}
+.moderate-uv{
+    color: white;
+    background-color: yellow
+}
+.high-uv{
+    color: white;
+    background-color: orange;
+}
+.vhigh-uv{
+    color: white;
+    background-color: red;
+}
+.extreme-uv{
+    color: white;
+    background-color: magenta;
+}

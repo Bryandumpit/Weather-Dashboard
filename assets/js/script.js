@@ -241,7 +241,7 @@ var createCityBtn = function(cityName){
     var cityButtonEl = document.createElement("button");
     cityButtonEl.textContent = cityName;
     console.log(cityButtonEl)
-    cityButtonEl.className = "btn edit-btn";
+    cityButtonEl.className = "btn btn-secondary btn-sm m-1 col-4";
     cityButtonEl.setAttribute("id", cityName)
 
     weatherRecallContainerEl.appendChild(cityButtonEl);
@@ -255,7 +255,7 @@ var loadLocalStorage = function(event) {
     
     
     console.log("remove previous content first")//placeholder
-
+    
     var city = event.target.getAttribute("id")
 
     console.log(city);
