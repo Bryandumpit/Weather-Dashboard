@@ -158,25 +158,27 @@ var displayCityWeatherForecast = function(cityWeather) {
     
     var uvEl = document.createElement("p");
     var currentUv =  cityWeatherForecast[1].current.uvi;
-    uvEl.textContent = 'UV Index: ' + currentUv;
-    console.log(uvEl);
+    var uvRating='';
     //control flow for uv value - low to extreme uv
     if (currentUv<3){//0-2 uv low                       
-        uvEl.setAttribute("class","low-uv");
+        uvRating = 'low-uv';
         console.log("low-uv")
     } else if (currentUv>2 && currentUv<6){//3-5 uv moderate
-        uvEl.setAttribute("class", "moderate-uv");
+        uvRating = 'moderate-uv';
         console.log("moderate-uv")
     } else if (currentUv>5&&currentUv<8){//6-7 uv high
-        uvEl.setAttribute("class", "high-uv")
+        uvRating = 'high-uv';
         console.log("high-uv")
     } else if(currentUv>7&&currentUv<11){//8-10 uv vhigh
-        uvEl.setAttribute("class", "vhigh-uv")
+        uvRating = 'vhigh-uv';
         console.log("vhigh-uv")
     } else {//11+  uv extreme
-        uvEl.setAttribute("class", "extreme-uv")
+        uvRating = 'extreme-uv';
         console.log("extreme-uv")
     }
+    uvEl.innerHTML = '<p> UV Index: <span class=' + uvRating + '>' + currentUv + '<span>';
+    console.log(uvEl);
+    
 
     //append elements to current weather container 
 
@@ -195,6 +197,7 @@ var displayCityWeatherForecast = function(cityWeather) {
         
         //create daily forecast container
         var forecastContainerEl = document.createElement("div")
+        forecastContainerEl.setAttribute("class", "forecast-card m-2 d-flex flex-column flex-wrap col-lg-2 col-md-8 xol-sm-12")
         
         var forecastDateIconEl = document.createElement("div")
         var forecastDate = moment().add(i,"day").format("MM/DD/YY");
@@ -255,7 +258,7 @@ var loadLocalStorage = function(event) {
     
     
     console.log("remove previous content first")//placeholder
-    
+
     var city = event.target.getAttribute("id")
 
     console.log(city);

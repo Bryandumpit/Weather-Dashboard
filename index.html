@@ -9,13 +9,13 @@
     <title>Weather Dashboard</title>
 </head>
 <body>
-    <header class="container text-center">
-        <h1 class="col">
+    <header class="container-fluid text-center">
+        <h1 class="">
             Weather Dashboard
         </h1>
     </header>
     <main class="container text-center row justify-content-around flex-wrap">
-        <section class="col" id="interaction-container">
+        <section class="col-sm-12 col-md-6 col-lg-3" id="interaction-container">
             <form class="card d-flex flex-column flex-wrap justify-content-around" id="form-container"><!--contains STATIC elements; contains city selector-->
                 <div class="card-header d-flex justify-content-center">
                     <label for="city" class="">Enter City Name:</label>
@@ -30,18 +30,16 @@
 
             </div>
         </section>
-        <section class="col" id="report-container">
-            <div class="d-flex flex-column justify-start" id="weather-container"><!--contains DYNAMIC elements; contains weather report-->
+        <section class="col-sm-12 col-md-6 col-lg-9" id="report-container">
+            <div class="d-flex flex-column justify-start align-items-start" id="weather-container"><!--contains DYNAMIC elements; contains weather report-->
 
             </div>
-            <div class="d-flex flex-row justify-content-center align-center" id="forecast-container"><!--contains DYNAMIC elements; 5 day forecast report-->
+            <div class="d-flex flex-row flex-wrap justify-content-around align-items-center" id="forecast-container"><!--contains DYNAMIC elements; 5 day forecast report-->
 
             </div>
         </section>
     </main>
-    <footer>
-
-    </footer>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./assets/js/script.js"></script>    
 </body>
