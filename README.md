@@ -1,11 +1,39 @@
 # Weather-Dashboard
 UofTSCS Coding Bootcamp: Module 06: Weather Dashboard
 
+## Purpose
+
+A website that provides current weather and 5-day forecast for multiple cities. The website allows for users to revist a previous search. These features should allow the users to plan a trip accordingly.
+
+## Built With
+
+This website was built with:
+* HTML
+* CSS/Bootsrap
+* Javascript
+* OpenWeather API : https://openweathermap.org/api
+
+# Website
+
+# Contribution
+
+# Project Details
+* index.html was written to provide container elements from which script.js would be able to interact with.
+* script.js was written to call from api endpoints to retrieve weather data, which are then used to dynamically create elements for the user to interact with. 
+    * weather data retrieved is stored to localStorage to allow the user to recall the results previously searched by clicking a recall button labelled with the city name searched.
+* bootstrap was used to build a responsive webpage to different screen sizes
+* OpenWeather One Call API 3.0 was used to retrieve weather data for different cities (based on input by user)
+    * the js logic takes a city name input from the user and calls a geoposition endpoint from the openweather API and retrieve lat and lon data
+    * the js logic then uses the lat and lon data to retrieve weather data from One Call 3.0 API
+
+
 ## User Story
 
 AS A traveler
 I WANT to see the weather outlook for multiple cities
 SO THAT I can plan a trip accordingly
+
+
 
 ## Acceptance Criteria
 
