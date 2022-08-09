@@ -50,7 +50,7 @@ var searchWeather = function(event){
 //fetch city geo position function; finds lat and lon and passes to weather and forecast functions
 var getCityGeoPos = function(city){
     var city = cityInputEl.value
-    var cityGeoPosApiUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=' + city + "&limit=1&appid=" + apiKey;
+    var cityGeoPosApiUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + city + "&limit=1&appid=" + apiKey;
      console.log(cityGeoPosApiUrl);
 
      fetch(cityGeoPosApiUrl)
