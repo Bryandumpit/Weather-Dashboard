@@ -23,6 +23,8 @@ var forecastReportContainerEl = document.querySelector("#forecast-container");
 
 var weatherRecallContainerEl = document.querySelector("#recall");
 
+var recallHeaderContainerEl = document.querySelector("#recall-header")
+
 //functions:
 
 //handles city input from user then passes to geoposition function to determine lat and lon
@@ -122,6 +124,8 @@ var displayCityWeatherForecast = function(cityWeather) {
     //add code to make sure previously displayed content is removed (for subsequent searches and recalls);
     weatherReportContainerEl.replaceChildren();
     forecastReportContainerEl.replaceChildren();
+    forecastHeaderContainerEl.replaceChildren();
+
     
 //--------------Current Weather Data Handling-----------------------------------   
     //create city current weather elements
@@ -146,17 +150,17 @@ var displayCityWeatherForecast = function(cityWeather) {
 
     var tempEl = document.createElement("p");
     var currentTemp =  cityWeatherForecast[1].current.temp; 
-    tempEl.textContent = 'Temperature: ' + currentTemp + "\u00B0C";
+    tempEl.innerHTML = '<p class="fw-bold">Temperature: <span class="fw-light">' + currentTemp + '\u00B0C</span></p>'
     console.log(tempEl);
 
     var windEl = document.createElement("p");
     var currentWind = cityWeatherForecast[1].current.wind_speed;
-    windEl.textContent = 'Wind Speed: ' + currentWind + "m/s";
+    windEl.innerHTML = '<p class="fw-bold">Wind Speed: <span class="fw-light">' + currentWind + 'm/s</span></p>'
     console.log(windEl);
 
     var humidEl = document.createElement("p");
     var currentHumid =  cityWeatherForecast[1].current.humidity;
-    humidEl.textContent = 'Humidity: ' + currentHumid + "%";
+    humidEl.innerHTML = '<p class="fw-bold">Humidity: <span class="fw-light">' + currentHumid + '%</span></p>'
     console.log(humidEl);
     
     var uvEl = document.createElement("p");
@@ -179,7 +183,7 @@ var displayCityWeatherForecast = function(cityWeather) {
         uvRating = 'extreme-uv';
         console.log("extreme-uv")
     }
-    uvEl.innerHTML = '<p> UV Index: <span class=' + uvRating + '>' + currentUv + '<span>';
+    uvEl.innerHTML = '<p class="fw-bold"> UV Index: <span class="fw-light ' + uvRating + '">' + currentUv + '<span>';
     console.log(uvEl);
     
 

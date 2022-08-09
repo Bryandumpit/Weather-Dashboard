@@ -8,6 +8,14 @@ header h1{
     border-bottom: 2.5px solid rgb(66, 64, 64);
 }
 
+#recall{
+    border: 1.5px solid rgb(66, 64, 64);
+}
+
+#check-weather{
+    min-width: 110px;
+}
+
 .low-uv{
     color: white;
     background-color: green;
