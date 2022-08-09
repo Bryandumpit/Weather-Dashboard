@@ -14,8 +14,13 @@ This website was built with:
 * OpenWeather API : https://openweathermap.org/api
 
 # Website
+* https://bryandumpit.github.io/Weather-Dashboard/
+
+![WeatherDashboard](./assets/images/weatherdashboardscreenshot.PNG)
 
 # Contribution
+
+Made with ❤️ by Bryan Dumpit with help from OpenWeather One Call 3.0 API.
 
 # Project Details
 * index.html was written to provide container elements from which script.js would be able to interact with.
